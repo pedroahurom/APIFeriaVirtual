@@ -10,10 +10,10 @@ module.exports = {
      * @property {String} database - Nombre de la base de datos
      */
     database: {
-        host: 'sql5.freemysqlhosting.net',
+        host: 'us-cdbr-east-06.cleardb.net',
         port: '3306',
-        user: 'sql5513061',
-        password: 'v6pq5bwGSI',
-        database: 'sql5513061'
+        user: 'b7457d9f2b0e63',
+        password: 'ee67de74',
+        database: 'heroku_337cd2c57e19fef'
     }
 };
