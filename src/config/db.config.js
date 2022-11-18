@@ -12,8 +12,8 @@ module.exports = {
     database: {
         host: 'us-cdbr-east-06.cleardb.net',
         port: '3306',
-        user: 'b7457d9f2b0e63',
-        password: 'ee67de74',
-        database: 'heroku_337cd2c57e19fef'
+        user: 'b2e1cb2f857e22',
+        password: '5327d595',
+        database: 'heroku_79e0462120ff671'
     }
 };
