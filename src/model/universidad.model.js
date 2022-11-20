@@ -19,7 +19,8 @@
      SELECT 
          universidad.ID AS Universidad_ID, 
          universidad.Nombre, 
-         universidad.Ruta_Escudo, 
+         universidad.Ruta_Escudo,
+         municipio.nombre as municipio, 
          IF(universidad.Tipo=0,'Publica','Privada') AS Tipo, 
          COUNT(IF(nivel_educativo.Nombre='LICENCIATURA',1, NULL)) AS LICENCIATURA, 
          COUNT(IF(nivel_educativo.Nombre='MAESTR&IACUTE;A',1, NULL)) AS MAESTRIA, 
@@ -34,7 +35,13 @@
          universidad.ID = carrera.Universidad_ID 
      INNER JOIN 
          nivel_educativo ON 
-         carrera.Nivel_Educativo_ID = nivel_educativo.ID 
+         carrera.Nivel_Educativo_ID = nivel_educativo.ID
+     INNER JOIN 
+         ubicacion ON 
+         ubicacion.Universidad_ID = universidad.ID 
+     INNER JOIN 
+         municipio ON 
+         municipio.ID = ubicacion.Municipio_ID 
      LEFT JOIN beca ON 
          universidad.ID = beca.Universidad_ID 
      WHERE universidad.Estatus_ID = 3
