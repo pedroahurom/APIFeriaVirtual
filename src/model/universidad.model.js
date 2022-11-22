@@ -354,7 +354,7 @@
              delete dataUniversidad[0].VideoSeccion_ID;
              delete dataUniversidad[0].FotoSeccion_ID;
              delete dataUniversidad[0].RecursoBecas;
-     
+             dataUniversidad[0].url_Maps= dataUniversidad[0].url_Maps.replace(/\\/g, "");
              result(null, dataUniversidad[0]);
          });
      });
