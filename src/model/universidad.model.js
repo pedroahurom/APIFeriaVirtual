@@ -119,7 +119,7 @@
   * @returns {Object} Lista de universidades.
   */
  Universidad.getType = (tipoUniversidad, result) => {
-     let query = `SELECT universidad.ID AS Universidad_ID, universidad.Nombre, universidad.Ruta_Escudo, IF(universidad.Tipo=0,'Publica','Privada') AS Tipo, COUNT(IF(nivel_educativo.Nombre='LICENCIATURA',1, NULL)) AS LICENCIATURA, COUNT(IF(nivel_educativo.Nombre='MAESTR&IACUTE;A',1, NULL)) AS MAESTRIA, COUNT(IF(nivel_educativo.Nombre='DOCTORADO',1, NULL)) AS DOCTORADO,IF(COUNT(beca.Titulo) > 0, 1, 0) AS BECA,GROUP_CONCAT(DISTINCT carrera.Nombre) Carreras FROM universidad INNER JOIN carrera ON universidad.ID = carrera.Universidad_ID INNER JOIN nivel_educativo ON carrera.Nivel_Educativo_ID = nivel_educativo.ID LEFT JOIN beca ON universidad.ID = beca.Universidad_ID WHERE universidad.Tipo=${tipoUniversidad} GROUP BY universidad.ID ORDER BY universidad.ID ASC`;
+     let query = `SELECT universidad.ID AS Universidad_ID, universidad.Nombre, universidad.Ruta_Escudo, IF(universidad.Tipo=0,'Pública','Privada') AS Tipo, COUNT(IF(nivel_educativo.Nombre='LICENCIATURA',1, NULL)) AS LICENCIATURA, COUNT(IF(nivel_educativo.Nombre='MAESTR&IACUTE;A',1, NULL)) AS MAESTRIA, COUNT(IF(nivel_educativo.Nombre='DOCTORADO',1, NULL)) AS DOCTORADO,IF(COUNT(beca.Titulo) > 0, 1, 0) AS BECA,GROUP_CONCAT(DISTINCT carrera.Nombre) Carreras FROM universidad INNER JOIN carrera ON universidad.ID = carrera.Universidad_ID INNER JOIN nivel_educativo ON carrera.Nivel_Educativo_ID = nivel_educativo.ID LEFT JOIN beca ON universidad.ID = beca.Universidad_ID WHERE universidad.Tipo=${tipoUniversidad} GROUP BY universidad.ID ORDER BY universidad.ID ASC`;
  
      /**
       * Obtiene la lista de universidades con sus datos mas relevantes, tomando en cuenta el tipo de universidad.
