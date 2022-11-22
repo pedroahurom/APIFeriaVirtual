@@ -355,6 +355,9 @@
              delete dataUniversidad[0].FotoSeccion_ID;
              delete dataUniversidad[0].RecursoBecas;
              dataUniversidad[0].url_Maps= dataUniversidad[0].url_Maps.replace(/\\/g, "");
+             if(dataUniversidad[0].Tipo=="Publica"){
+                 dataUniversidad[0].Tipo="Pública";
+             }
              result(null, dataUniversidad[0]);
          });
      });
