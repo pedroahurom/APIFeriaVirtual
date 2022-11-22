@@ -23,7 +23,7 @@
          municipio.nombre as municipio, 
          IF(universidad.Tipo=0,'Publica','Privada') AS Tipo, 
          COUNT(IF(nivel_educativo.Nombre='LICENCIATURA',1, NULL)) AS LICENCIATURA, 
-         COUNT(IF(nivel_educativo.Nombre='MAESTR&IACUTE;A',1, NULL)) AS MAESTRIA, 
+         COUNT(IF(nivel_educativo.Nombre='MAESTRÍA',1, NULL)) AS MAESTRIA, 
          COUNT(IF(nivel_educativo.Nombre='DOCTORADO',1, NULL)) AS DOCTORADO, 
          IF(COUNT(beca.Titulo) > 0, 1, 0) AS BECA, 
          GROUP_CONCAT(DISTINCT carrera.Nombre) Carreras,
