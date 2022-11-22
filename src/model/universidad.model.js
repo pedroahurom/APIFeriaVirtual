@@ -21,7 +21,7 @@
          universidad.Nombre, 
          universidad.Ruta_Escudo,
          municipio.nombre as municipio, 
-         IF(universidad.Tipo=0,'Publica','Privada') AS Tipo, 
+         IF(universidad.Tipo=0,'Pública','Privada') AS Tipo, 
          COUNT(IF(nivel_educativo.Nombre='LICENCIATURA',1, NULL)) AS LICENCIATURA, 
          COUNT(IF(nivel_educativo.Nombre='MAESTRÍA',1, NULL)) AS MAESTRIA, 
          COUNT(IF(nivel_educativo.Nombre='DOCTORADO',1, NULL)) AS DOCTORADO, 
