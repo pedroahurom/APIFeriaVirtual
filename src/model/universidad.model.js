@@ -315,7 +315,7 @@
                     return;
                 }
                 videosGenerados = res;
-                if(videosGenerados !== null) {
+                if(videosGenerados == null) {
                     videosGenerados = [
                         "NA"
                     ];
