@@ -315,12 +315,17 @@
                     return;
                 }
                 videosGenerados = res;
+                if(videosGenerados.length !== null) {
+                    videosGenerados = [
+                        "NA"
+                    ];
+                }else {
                 var videosGenerados = videosGenerados.map(video => {
                     return {
                         ...video,
                         Recurso: urlYoutube+video.Recurso
                     }
-                });
+                });}
               
              const dataUniversidad = data.map(dataUni => {
                  return {
