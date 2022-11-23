@@ -73,34 +73,38 @@ TestVocacional.calcularCentil = (testPuntaje, grupoEdad, genero, result) => {
     });
 
     let query = `
-    SELECT DISTINCT
+    SELECT 
         universidad.ID AS Universidad_ID, 
         universidad.Nombre, 
-        universidad.Ruta_Escudo, 
-        IF(universidad.Tipo=0,'Publica','Privada') AS Tipo,
-        IF(COUNT(beca.Titulo) > 0, 1, 0) AS BECA,
+        universidad.Ruta_Escudo,
+        municipio.nombre as municipio, 
+        IF(universidad.Tipo=0,'Pública','Privada') AS Tipo, 
         COUNT(IF(nivel_educativo.Nombre='LICENCIATURA',1, NULL)) AS LICENCIATURA, 
-        COUNT(IF(nivel_educativo.Nombre='MAESTR&IACUTE;A',1, NULL)) AS MAESTRIA, 
-        COUNT(IF(nivel_educativo.Nombre='DOCTORADO',1, NULL)) AS DOCTORADO
+        COUNT(IF(nivel_educativo.Nombre='MAESTRÍA',1, NULL)) AS MAESTRIA, 
+        COUNT(IF(nivel_educativo.Nombre='DOCTORADO',1, NULL)) AS DOCTORADO, 
+        IF(COUNT(beca.Titulo) > 0, 1, 0) AS BECA, 
+        GROUP_CONCAT(DISTINCT carrera.Nombre) Carreras,
+        GROUP_CONCAT(DISTINCT carrera.Recurso) RecursoCarreras 
     FROM 
         universidad 
     INNER JOIN 
-        carrera ON
-            universidad.ID = carrera.Universidad_ID
+        carrera ON 
+        universidad.ID = carrera.Universidad_ID 
     INNER JOIN 
         nivel_educativo ON 
-            carrera.Nivel_Educativo_ID = nivel_educativo.ID 
-    LEFT JOIN 
-        beca ON 
-            universidad.ID = beca.Universidad_ID
+        carrera.Nivel_Educativo_ID = nivel_educativo.ID
     INNER JOIN 
-        carrera_area ON 
-            carrera_area.Carrera_ID= carrera.ID
-    WHERE (carrera_area.Area_ID = ${area1} OR carrera_area.Area_ID = ${area2}) AND universidad.Estatus_ID = 3
-        GROUP BY universidad.ID 
-        ORDER BY universidad.ID 
-    ASC
-    `;
+        ubicacion ON 
+        ubicacion.Universidad_ID = universidad.ID 
+    INNER JOIN 
+        municipio ON 
+        municipio.ID = ubicacion.Municipio_ID 
+    LEFT JOIN beca ON 
+        universidad.ID = beca.Universidad_ID 
+    WHERE universidad.Estatus_ID = 3
+    GROUP BY universidad.ID 
+    ORDER BY universidad.ID 
+    ASC`;
 
     let queryGetArea = `
     SELECT
