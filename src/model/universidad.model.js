@@ -164,9 +164,6 @@
          IF(universidad.Tipo=0,'Publica','Privada') AS Tipo,
          GROUP_CONCAT(DISTINCT carrera.Nombre) Carreras,
          GROUP_CONCAT(DISTINCT carrera.Recurso) RecursoCarreras,
-         GROUP_CONCAT(DISTINCT video.Seccion_ID) VideoSeccion_ID,
-         GROUP_CONCAT(DISTINCT video.Titulo) Videos,
-         GROUP_CONCAT(DISTINCT video.Recurso) RecursoVideos,
          GROUP_CONCAT(DISTINCT foto.Seccion_ID) FotoSeccion_ID,
          GROUP_CONCAT(DISTINCT foto.Titulo) Fotos,
          GROUP_CONCAT(DISTINCT foto.Recurso) RecursoFotos,
@@ -175,9 +172,6 @@
          ubicacion.url_Maps,
          CONCAT(Num_Interior, " ", Num_Exterior, " ", Calle, " ", Colonia, " ", Ciudad, " ", municipio.Nombre, " ", Codigo_Postal) AS Direccion
      FROM universidad
-     INNER JOIN video
-     ON 
-         universidad.ID = video.Universidad_ID
      INNER JOIN carrera 
      ON 
          universidad.ID = carrera.Universidad_ID 
@@ -200,6 +194,17 @@
      ON
          universidad.ID = beca.Universidad_ID
      WHERE
+         universidad.ID = ${id}`;
+    
+    let videos = `SELECT
+	video.Titulo,
+    video.Recurso,
+    video.Seccion_ID
+    FROM universidad
+     INNER JOIN video
+     ON 
+         universidad.ID = video.Universidad_ID
+         WHERE
          universidad.ID = ${id}`;
  
      let queryRedesSociales = `
@@ -254,6 +259,7 @@
           * @param {function} result Maneja los errores y responde, si todo va bien.
           * @returns {Object} Datos de la universidad.
           */
+          
          pool.query(query, (err, res) => {
              if (err) {
                  console.log("error: ", err);
@@ -283,9 +289,9 @@
                      ...dataUni,
                      Carreras: dataUni.Carreras !== null ? dataUni.Carreras.split(',') : ["NA"],
                      RecursoCarreras: dataUni.RecursoCarreras !== null ? dataUni.RecursoCarreras.split(',') : ["NA"],
-                     VideoSeccion_ID: dataUni.VideoSeccion_ID !== null ? dataUni.VideoSeccion_ID.split(',').map(id => Number(id)) : ["NA"],
-                     TituloVideo: dataUni.Videos !== null ? dataUni.Videos.split(',') : ["NA"],
-                     RecursoVideo: dataUni.RecursoVideos !== null ? dataUni.RecursoVideos.split(',') : ["NA"],
+                     //VideoSeccion_ID: dataUni.VideoSeccion_ID !== null ? dataUni.VideoSeccion_ID.split(',').map(id => Number(id)) : ["NA"],
+                     //TituloVideo: dataUni.Videos !== null ? dataUni.Videos.split(',') : ["NA"],
+                     //RecursoVideo: dataUni.RecursoVideos !== null ? dataUni.RecursoVideos.split(',') : ["NA"],
                      FotoSeccion_ID: dataUni.FotoSeccion_ID !== null ? dataUni.FotoSeccion_ID.split(',').map(id => Number(id)) : ["NA"],
                      TituloFoto: dataUni.Fotos !== null ? dataUni.Fotos.split(',') : ["NA"],
                      RecursoFoto: dataUni.RecursoFotos !== null ? dataUni.RecursoFotos.split(',') : ["NA"],
@@ -301,6 +307,21 @@
               * @param {Object} dataUni Datos de la universidad.
               * @returns {Object} Datos de la universidad y sus recursos. 
               */
+             //var videosGenerados = [];
+              pool.query(videos, (err, res) => {
+                if (err) {
+                    console.log("error: ", err);
+                    result({ message: "Ocurrio un error al obtener los datos los videos" }, null);
+                    return;
+                }
+                videosGenerados = res;
+                var videosGenerados = videosGenerados.map(video => {
+                    return {
+                        ...video,
+                        Recurso: urlYoutube+video.Recurso
+                    }
+                });
+              
              const dataUniversidad = data.map(dataUni => {
                  return {
                      ...dataUni,
@@ -318,13 +339,13 @@
                              Recurso: dataUni.RecursoCarreras[dataUni.Carreras.indexOf(carrera)]
                          }
                      }),
-                     Videos: dataUni.TituloVideo.map(video => {
+                     Videos: videosGenerados/*dataUni.TituloVideo.map(video => {
                          return {
                              Seccion_ID: dataUni.VideoSeccion_ID[dataUni.TituloVideo.indexOf(video)] > 0 ? dataUni.VideoSeccion_ID[dataUni.TituloVideo.indexOf(video)] : 0,
                              Titulo: video,
                              Recurso: dataUni.RecursoVideo[dataUni.TituloVideo.indexOf(video)] === "NA" ? "NA" : urlYoutube + dataUni.RecursoVideo[dataUni.TituloVideo.indexOf(video)]
                          }
-                     }),
+                     })*/,
                      Fotos: dataUni.TituloFoto.map(foto => {
                          dataUni.RecursoFoto[dataUni.TituloFoto.indexOf(foto)] !== undefined ? 1 : dataUni.RecursoFoto[dataUni.TituloFoto.indexOf(foto)] = "NA";
                          return {
@@ -360,6 +381,7 @@
              }
              result(null, dataUniversidad[0]);
          });
+        });
      });
  };
  
